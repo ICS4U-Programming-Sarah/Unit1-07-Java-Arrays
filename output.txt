@@ -1,0 +1,2 @@
+The mean is: 72.6
+The median is: 72.0
