@@ -2,19 +2,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Scanner;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 /**
-* This program uses a loop to calculates the
-* sum of numbers. It tells the user if input
-* is valid or not, by reading file.
+* This program calculates median, mode
+* and mean by using arrays & writing to file.
+*
 *
 * @author  Sarah Andrew
 * @version 1.0
 *
-* @since   2023-03-10
+* @since   2023-03-22
 */
 
 public final class Arrays {
@@ -37,11 +37,12 @@ public final class Arrays {
      */
     public static void main(String[] args) {
         // Pass path to file as parameter.
-        final File file = new File("set1.txt");
+        final File file = new File("set3.txt");
         final File fileOut = new File("output.txt");
 
         // Create a new list.
-        List<String> listOfStrings = new ArrayList<String>();
+        final List<String> listOfStrings =
+            new ArrayList<String>();
 
         // Declare variable.
         String stringList;
@@ -62,12 +63,14 @@ public final class Arrays {
             }
 
             // Convert from list to array.
-            String[] arrayOfStr = listOfStrings.toArray(new String[0]);
+            final String[] arrayOfStr =
+                listOfStrings.toArray(new String[0]);
 
             // Convert all elements in array to an integers.
             // To do so, loop through each element & convert
             // each string.
-            int[] arrayNum = new int[arrayOfStr.length];
+            final int[] arrayNum =
+                new int[arrayOfStr.length];
             for (int counter = 0; counter < arrayNum.length; counter++) {
                 arrayNum[counter] = Integer.parseInt(arrayOfStr[counter]);
             }
@@ -78,6 +81,7 @@ public final class Arrays {
             // Call function.
             final double userMean = calcMean(arrayNum);
             final double userMedian = calcMedian(arrayNum);
+            final int[] userMode = calcMode(arrayNum);
 
             // Print number of set to user.
             System.out.println(listOfStrings);
@@ -85,12 +89,16 @@ public final class Arrays {
             // Display to user.
             System.out.println("The mean is: " + userMean);
             System.out.println("The median is: "
-                + userMedian);
+                    + userMedian);
+            System.out.println("The mode is: "
+                + java.util.Arrays.toString(userMode));
 
             // Display in file.
             write.println("The mean is: " + userMean);
-            write.println("The median is: " + 
-                    userMedian);
+            write.println("The median is: "
+                + userMedian);
+            write.println("The mode is: "
+                + java.util.Arrays.toString(userMode));
 
             // Closes scanner & writer.
             write.close();
@@ -105,8 +113,7 @@ public final class Arrays {
     * This function calculates mean of numbers,
     * in set.
     *
-    * @param sum passed
-    * @param mean passed.
+    * @param arrayNums passed
     * @return mean.
     */
     public static double calcMean(int arrayNums[]) {
@@ -127,21 +134,20 @@ public final class Arrays {
     * This function calculates median of numbers,
     * in set.
     *
-    * @param median passed
-    * @param aNum passed.
+    * @param arrayNums passed.
     * @return median.
     */
     public static double calcMedian(int arrayNums[]) {
         // Declare variables.
         double median = 0;
-        int aNum = arrayNums.length;
+        final int aNum = arrayNums.length;
 
         // Calculate median, check for cases.
         // Case if even.
         if (aNum % 2 == 0) {
             // Calculate average of two terms.
             median = (arrayNums[aNum / 2 - 1]
-                + arrayNums[aNum / 2]) / 2; 
+                    + arrayNums[aNum / 2]) / 2;
         } else {
             // Case if odd.
             median = arrayNums[aNum / 2];
@@ -149,5 +155,59 @@ public final class Arrays {
         // Return back to main.
         return median;
     }
-}
+    /**
+    * This function calculates mode of numbers,
+    * in set.
+    *
+    * @param arrayNums passed.
+    * @return arrayMode.
+    */
+    public static int[] calcMode(int[] arrayNums) {
+        // Declare variables.
+        int maxCount = 0;
+        int counter = 0;
+        int counter2 = 0;
+        final int num = arrayNums.length;
 
+        // Create an arraylist.
+        final ArrayList<Integer> listOfModes =
+            new ArrayList<Integer>();
+
+        // Find the maximum count of any repeating elements.
+        for (counter = 0; counter < num; counter++) {
+            int count = 0;
+            for (counter2 = 0; counter2 < num; counter2++) {
+                if (arrayNums[counter2] == arrayNums[counter])
+                    count++;
+            }
+            // Clear array if count > maxCount,
+            // if it's equalled to add the element
+            // to list.
+            if (count > maxCount) {
+                maxCount = count;
+                listOfModes.clear();
+                listOfModes.add(arrayNums[counter]);
+            } else if (count == maxCount) {
+                listOfModes.add(arrayNums[counter]);
+            }
+        }
+        // Remove duplicates.
+        if (listOfModes.size() > 1) {
+            int number = 1;
+            while (number < listOfModes.size()) {
+                if (listOfModes.get(number) == listOfModes.get(number - 1)) {
+                    listOfModes.remove(number);
+                } else {
+                    number++;
+                }
+            }
+        }
+        // Convert from list to array.
+        final int[] arrayMode = new int[listOfModes.size()];
+        for (int counter4 = 0; counter4 < arrayMode.length; counter4++) {
+            arrayMode[counter4] = listOfModes.get(counter4);
+        }
+        // Return array back to main.
+        return arrayMode;
+    }
+}
